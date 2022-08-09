@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #digit {
+        width: 25px;
+        height: 46px;
+        display: inline-block;
+        border: 1px solid black;
+        position: relative;
+        overflow: hidden;
+      }
+      #digit > ul,
+      #digit > ul > li {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #digit > ul {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+      }
+      #digit > ul > li {
+        text-align: center;
+        width: 25px;
+        height: 46px;
+        line-height: 46px;
+        flex: auto 0 0;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="digit">
+      <ul>
+        <li>0</li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>0</li>
+      </ul>
+    </div>
+
+    <script>
+      const ul = document.querySelector("#digit>ul");
+      const li = document.querySelector("#digit>ul>li");
+      console.log(ul.offsetWidth, ul.offsetHeight);
+      console.log(li.offsetWidth, li.offsetHeight);
+      const count = 11;
+      const timing = 1000;
+      const interval = 10;
+      const step = ul.offsetHeight / (timing / interval);
+      setInterval(() => {
+        ul.style.top = `${ul.offsetTop - step}px`;
+        if (-ul.offsetTop > ul.offsetHeight - li.offsetHeight) {
+          ul.style.top = `0px`;
+        }
+      }, interval);
+    </script>
+  </body>
+</html>
