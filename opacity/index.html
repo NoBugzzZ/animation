@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #digit {
+            width: 25px;
+            height: 46px;
+            display: inline-block;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        #digit>ul,
+        #digit>ul>li {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #digit>ul>li {
+            position: absolute;
+            text-align: center;
+            width: 25px;
+            height: 46px;
+            line-height: 46px;
+            display: inline-block;
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="digit">
+        <ul>
+            <li>0</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+            <li>9</li>
+        </ul>
+    </div>
+
+    <script>
+        const ul = document.querySelector("#digit>ul");
+        const lis = document.querySelectorAll("#digit>ul>li");
+        lis[0].style.opacity = 1;
+
+        const liCount = lis.length;
+        const intervalPerLI = 100;
+        const animationPerLI = 1000;
+        const intervalPerStep = 10;
+        const step = 1 / (animationPerLI / intervalPerStep);
+
+        let i = 0;
+        setInterval(() => {
+            slide(i++);
+            if (i >= liCount) {
+                i = 0;
+            }
+        }, animationPerLI + intervalPerLI)
+        function slide(index){
+            const preIndex = index;
+            const preTimer = setInterval(() => {
+                lis[preIndex].style.opacity -= step;
+                if (lis[preIndex].style.opacity <= 0) {
+                    clearInterval(preTimer);
+                    lis[preIndex].style.opacity = 0;
+                }
+            }, intervalPerStep);
+            const postIndex = index>=liCount-1?0:index+1;
+            console.log(preIndex,postIndex)
+            const postTimer = setInterval(() => {
+                lis[postIndex].style.opacity = +lis[postIndex].style.opacity + step;
+                if (lis[postIndex].style.opacity >= 1) {
+                    clearInterval(postTimer);
+                    lis[postIndex].style.opacity = 1;
+                }
+            }, intervalPerStep)
+        }
+    </script>
+</body>
+
+</html>
