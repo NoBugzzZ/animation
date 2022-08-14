@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #digit {
+            width: 25px;
+            height: 46px;
+            display: inline-block;
+            border: 1px solid black;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #digit>ul,
+        #digit>ul>li {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #digit>ul {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+        }
+
+        #digit>ul>li {
+            text-align: center;
+            width: 25px;
+            height: 46px;
+            line-height: 46px;
+            flex: auto 0 0;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="digit"></div>
+    <div>
+        <button onclick="handleStopClick()">stop</button>
+        <button onclick="handleResumeClick()">resume</button>
+        <button onclick="handleReverseClick()">reverse</button>
+    </div>
+    <div>
+        <input id='to' type="number" />
+        <button onclick="handleToClick()">to</button>
+    </div>
+
+    <script>
+        const list = Array.from({ length: 10 }, (_, index) => index);
+        list.splice(0, 0, list[list.length - 1]);
+        list.push(list[1]);
+
+        const input = document.getElementById('to');
+        const ul = document.createElement('ul');
+        list.forEach((v) => {
+            const li = document.createElement('li');
+            li.innerText = v;
+            ul.appendChild(li);
+        })
+        const digitContainer = document.getElementById('digit');
+        digitContainer.appendChild(ul);
+
+        const liHeight = document.querySelector("#digit>ul>li").offsetHeight;
+        document.querySelector("#digit>ul").style.top = `${-liHeight}px`;
+
+        const liCount = list.length;
+        const intervalPerLI = 1000;
+        const animationPerLI = 1000;
+
+        let i = 1;
+        let stop = false;
+        let direction = 1; //1为从上向下滚动,-1相反
+        let timer = setTimeout(callback, intervalPerLI);
+        let to = -1;
+        let inUse = false;
+        function callback() {
+            inUse = true;
+            const _direction = direction;
+            const _to = to;
+            animate((fraction) => {
+                return fraction;
+            }, (progress) => {
+                ul.style.top = `${-i * liHeight - progress * liHeight * _direction}px`
+            }, animationPerLI, () => {
+                i = (i + 1 * _direction + liCount) % liCount;
+                if (_direction === 1) {
+                    if (i === liCount - 1) {
+                        ul.style.top = -liHeight;
+                        i = 1;
+                    }
+                } else if (_direction === -1) {
+                    if (i === 0) {
+                        ul.style.top = -(liCount - 2) * liHeight;
+                        i = liCount - 2;
+                    }
+                }
+                if (!stop) {
+                    timer = setTimeout(callback, intervalPerLI);
+                } else {
+                    if (i !== _to) {
+                        timer = setTimeout(callback, intervalPerLI);
+                    } else {
+                        to = -1;
+                    }
+                }
+                inUse = false;
+            })
+        }
+        function animate(timing = () => { }, draw = () => { }, duration, stopCallback = () => { }) {
+            const start = performance.now();
+            const requestID = requestAnimationFrame(function callback(time) {
+                let fraction = (time - start) / duration;
+                fraction = fraction > 1 ? 1 : fraction;
+                const progress = timing(fraction);
+                draw(progress);
+                if (fraction < 1) {
+                    requestAnimationFrame(callback);
+                } else {
+                    stopCallback();
+                }
+            });
+        }
+        function handleStopClick() {
+            clearTimeout(timer);
+            stop = true;
+        }
+        function handleResumeClick() {
+            stop = false;
+            timer = setTimeout(callback, intervalPerLI)
+        }
+        function handleReverseClick() {
+            direction = -direction;
+            console.log(`reverse,direction=${direction}`)
+        }
+        function handleToClick() {
+            handleStopClick();
+            const value = input.value;
+            if (value) {
+                const _value = +value;
+                if (_value <= 0 || _value >= liCount - 1 || i === _value) return;
+                clearTimeout(timer);
+                to = _value;
+                if (!inUse) {
+                    timer = setTimeout(callback, intervalPerLI);
+                } else {
+                    const interval = setInterval(() => {
+                        if (!inUse) {
+                            timer = setTimeout(callback, intervalPerLI);
+                        }
+                    }, intervalPerLI / 10)
+                }
+
+            }
+
+        }
+    </script>
+</body>
+
+</html>
