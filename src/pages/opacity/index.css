@@ -1,0 +1,25 @@
+#digit {
+    width: 25px;
+    height: 46px;
+    display: inline-block;
+    border: 1px solid black;
+    position: relative;
+}
+
+#digit>ul,
+#digit>ul>li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#digit>ul>li {
+    position: absolute;
+    text-align: center;
+    width: 25px;
+    height: 46px;
+    line-height: 46px;
+    display: inline-block;
+    opacity: 0;
+    /* transition: all 1s; */
+}

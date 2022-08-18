@@ -1,0 +1,28 @@
+#digit {
+  width: 25px;
+  height: 46px;
+  display: inline-block;
+  border: 1px solid black;
+  overflow: hidden;
+}
+
+#digit > ul,
+#digit > ul > li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#digit > ul {
+  display: flex;
+  flex-direction: column;
+}
+
+#digit > ul > li {
+  text-align: center;
+  width: 25px;
+  height: 46px;
+  line-height: 46px;
+  flex: auto 0 0;
+  display: inline-block;
+}

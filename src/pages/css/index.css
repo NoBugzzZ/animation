@@ -1,0 +1,42 @@
+#digit {
+  width: 25px;
+  height: 46px;
+  display: inline-block;
+  border: 1px solid black;
+  overflow: hidden;
+}
+#digit > ul,
+#digit > ul > li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+#digit > ul {
+  display: flex;
+  flex-direction: column;
+  animation: top-to-bottom-scroll 5s linear infinite;
+}
+#digit > ul > li {
+  text-align: center;
+  width: 25px;
+  height: 46px;
+  line-height: 46px;
+  flex: auto 0 0;
+  display: inline-block;
+}
+@keyframes top-to-bottom-scroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(calc(-10 / 11 * 100%));
+  }
+}
+@keyframes left-to-right-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-10 * 100%));
+  }
+}
